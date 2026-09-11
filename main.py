@@ -43,7 +43,7 @@ def obter_temperaturas():
         return []
     return historico_temperaturas
 
-# Rota da Tela Inicial com o Botão de Acesso
+# Rota da Tela Inicial com a identidade COPLAC
 @app.get("/", response_class=HTMLResponse)
 def tela_inicial():
     return """
@@ -51,7 +51,7 @@ def tela_inicial():
     <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
-        <title>Central de Supervisório - Fábrica</title>
+        <title>COPLAC - Central de Supervisório</title>
         <style>
             body { 
                 background-color: #0e1117; 
@@ -71,38 +71,52 @@ def tela_inicial():
                 border-radius: 12px; 
                 border: 1px solid #46485f; 
                 box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                max-width: 500px;
+                width: 90%;
             }
-            h1 { color: #ff4b4b; margin-bottom: 10px; }
-            p { color: #a3a8b8; margin-bottom: 30px; }
+            .logo-coplac { 
+                font-family: 'Georgia', serif; 
+                font-size: 38px; 
+                font-weight: bold; 
+                font-style: italic; 
+                color: #cc2929; 
+                letter-spacing: 2px; 
+                margin-bottom: 5px; 
+            }
+            .sub-logo { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; }
+            h1 { color: #fafafa; font-size: 20px; margin-bottom: 10px; }
+            p { color: #a3a8b8; margin-bottom: 30px; font-size: 14px; }
             .btn-app { 
-                background-color: #ff4b4b; 
+                background-color: #cc2929; 
                 color: white; 
-                padding: 16px 28px; 
-                font-size: 18px; 
+                padding: 16px 20px; 
+                font-size: 16px; 
                 font-weight: bold; 
                 border: none; 
                 border-radius: 8px; 
                 cursor: pointer; 
                 text-decoration: none; 
-                display: inline-block; 
+                display: block; 
                 transition: background 0.3s;
             }
             .btn-app:hover { 
-                background-color: #ff2222; 
+                background-color: #e63939; 
             }
         </style>
     </head>
     <body>
         <div class="container">
-            <h1>🏭 Central de Automação Industrial</h1>
+            <div class="logo-coplac">COPLAC</div>
+            <div class="sub-logo">Automation Systems</div>
+            <h1>Central de Automação Industrial</h1>
             <p>Selecione o equipamento desejado para monitoramento:</p>
-            <a href="/painel" class="btn-app">DADOS DE TEMPERATURA MÁQUINA DE SOLDA</a>
+            <a href="/painel" class="btn-app">🌡️ DADOS DE TEMPERATURA MÁQUINA DE SOLDA</a>
         </div>
     </body>
     </html>
     """
 
-# Rota do Painel de Monitoramento dos 17 Canais
+# Rota do Painel de Monitoramento dos 17 Canais com a marca COPLAC
 @app.get("/painel", response_class=HTMLResponse)
 def painel_visual():
     return """
@@ -110,11 +124,12 @@ def painel_visual():
     <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
-        <title>Supervisório - Máquina de Solda</title>
+        <title>COPLAC - Supervisório Máquina de Solda</title>
         <style>
             body { background-color: #0e1117; color: #fafafa; font-family: sans-serif; padding: 20px; }
-            .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-            h1 { color: #ff4b4b; margin: 0; font-size: 24px; }
+            .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #262730; padding-bottom: 15px; }
+            .logo-coplac { font-family: 'Georgia', serif; font-size: 26px; font-weight: bold; font-style: italic; color: #cc2929; letter-spacing: 1px; }
+            h1 { color: #fafafa; margin: 0; font-size: 20px; }
             .btn-voltar { background-color: #46485f; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; }
             .btn-voltar:hover { background-color: #5c5f78; }
             .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 20px; }
@@ -126,8 +141,8 @@ def painel_visual():
     <body>
         <div class="header-bar">
             <div>
+                <div class="logo-coplac">COPLAC</div>
                 <h1>🌡️ Temperaturas - Máquina de Solda</h1>
-                <p style="margin: 5px 0 0 0; color: #a3a8b8; font-size: 14px;">Monitoramento em tempo real dos 17 canais do CLP Delta DVP-12SE.</p>
             </div>
             <a href="/" class="btn-voltar">⬅ Voltar ao Menu</a>
         </div>

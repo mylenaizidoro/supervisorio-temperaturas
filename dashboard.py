@@ -14,7 +14,7 @@ cards_placeholder = st.empty()
 grafico_placeholder = st.empty()
 
 # URL atualizada com o novo túnel ativo do Serveo
-API_GET_URL = "https://real-days-hunt.loca.lt/temperaturas"
+API_GET_URL = "https://large-trains-sniff.loca.lt/temperaturas"
 
 # Cabeçalho necessário para o Serveo liberar o acesso da API sem a página de aviso
 HEADERS = {"serveo-skip-browser-warning": "true"}

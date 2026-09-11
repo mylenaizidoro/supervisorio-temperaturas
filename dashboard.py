@@ -7,7 +7,7 @@ st.set_page_config(page_title="Supervisório Industrial", page_icon="🌡️", l
 if "pagina" not in st.session_state:
     st.session_state.pagina = "home"
 
-API_GET_URL = "https://eight-planes-cut.loca.lt/temperaturas"
+API_GET_URL = "https://real-days-hunt.loca.lt/temperaturas"
 HEADERS = {"serveo-skip-browser-warning": "true"}
 
 # ---------------------------------------------------------

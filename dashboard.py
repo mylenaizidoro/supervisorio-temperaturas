@@ -1,47 +1,51 @@
 import streamlit as st
 import pandas as pd
 import requests
-import time
 
 st.set_page_config(page_title="Supervisório Industrial", page_icon="🌡️", layout="wide")
 
-if "maquina_selecionada" not in st.session_state:
-    st.session_state.maquina_selecionada = None
+# Inicializa a sessão para controlar as telas
+if "pagina" not in st.session_state:
+    st.session_state.pagina = "home"
 
 API_GET_URL = "https://eight-planes-cut.loca.lt/temperaturas"
 HEADERS = {"serveo-skip-browser-warning": "true"}
 
-# --- TELA INICIAL: ESCOLHA DA MÁQUINA ---
-if st.session_state.maquina_selecionada is None:
+# ==========================================
+# TELA 1: CENTRAL DE SELEÇÃO DE MÁQUINAS
+# ==========================================
+if st.session_state.pagina == "home":
     st.title("🏭 Central de Supervisão - Células Industriais")
     st.write("Selecione abaixo a máquina que deseja monitorar em tempo real:")
     
     st.markdown("---")
     
     if st.button("🔥 Máquina de Solda - Temperaturas", use_container_width=True):
-        st.session_state.maquina_selecionada = "Máquina de Solda - Temperaturas"
+        st.session_state.pagina = "maquina_solda"
         st.rerun()
         
     if st.button("📊 PH02 - Dash", use_container_width=True):
-        st.session_state.maquina_selecionada = "PH02 - Dash"
+        st.session_state.pagina = "ph02"
         st.rerun()
         
     if st.button("🛡️ PH09 - Isolant Plancher", use_container_width=True):
-        st.session_state.maquina_selecionada = "PH09 - Isolant Plancher"
+        st.session_state.pagina = "ph09"
         st.rerun()
         
     if st.button("⚙️ PH20 - XDF", use_container_width=True):
-        st.session_state.maquina_selecionada = "PH20 - XDF"
+        st.session_state.pagina = "ph20"
         st.rerun()
         
     if st.button("🔧 PH03 - Isolador Tcross", use_container_width=True):
-        st.session_state.maquina_selecionada = "PH03 - Isolador Tcross"
+        st.session_state.pagina = "ph03"
         st.rerun()
 
-# --- TELA DE DETALHES: MÁQUINA DE SOLDA ---
-elif st.session_state.maquina_selecionada == "Máquina de Solda - Temperaturas":
+# ==========================================
+# TELA 2: MÁQUINA DE SOLDA (TEMPERATURAS)
+# ==========================================
+elif st.session_state.pagina == "maquina_solda":
     if st.button("⬅️ Voltar para a Seleção de Máquinas"):
-        st.session_state.maquina_selecionada = None
+        st.session_state.pagina = "home"
         st.rerun()
 
     st.title("🔥 Supervisório - Máquina de Solda (Temperaturas)")
@@ -100,11 +104,13 @@ elif st.session_state.maquina_selecionada == "Máquina de Solda - Temperaturas":
     except Exception as e:
         status_placeholder.error(f"❌ Erro ao conectar com a API FastAPI: {e}")
 
-# --- TELA PARA AS OUTRAS MÁQUINAS (EM BREVE) ---
+# ==========================================
+# TELA 3: OUTRAS MÁQUINAS (EM DESENVOLVIMENTO)
+# ==========================================
 else:
     if st.button("⬅️ Voltar para a Seleção de Máquinas"):
-        st.session_state.maquina_selecionada = None
+        st.session_state.pagina = "home"
         st.rerun()
 
-    st.title(f"⚙️ {st.session_state.maquina_selecionada}")
-    st.info("ℹ️ Esta célula ainda está em fase de configuração ou sem supervisório de temperaturas integrado no momento. Volte em breve!")
+    st.title("⚙️ Célula em Desenvolvimento")
+    st.info("ℹ️ Esta máquina ainda não possui o supervisório de temperaturas integrado. Volte em breve para novidades!")

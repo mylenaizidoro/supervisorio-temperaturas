@@ -12,7 +12,8 @@ status_placeholder = st.empty()
 cards_placeholder = st.empty()
 grafico_placeholder = st.empty()
 
-API_GET_URL = "http://127.0.0.1:8000/temperaturas"
+# ⚠️ COLOQUE AQUI O SEU LINK DO NGROK (Ex: "https://xxxx-xx.ngrok-free.app/temperaturas")
+API_GET_URL = "https://SEU_LINK_DO_NGROK/temperaturas"
 
 while True:
     try:

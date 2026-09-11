@@ -54,10 +54,10 @@ def painel_visual():
         <style>
             body { background-color: #0e1117; color: #fafafa; font-family: sans-serif; padding: 20px; }
             h1 { color: #ff4b4b; }
-            .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
-            .card { background-color: #262730; border-radius: 8px; padding: 15px; text-align: center; border: 1px solid #46485f; }
-            .card h3 { margin: 0; font-size: 16px; color: #a3a8b8; }
-            .card p { margin: 10px 0 0 0; font-size: 24px; font-weight: bold; color: #00ffcc; }
+            .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 20px; }
+            .card { background-color: #262730; border-radius: 8px; padding: 12px; text-align: center; border: 1px solid #46485f; }
+            .card h3 { margin: 0; font-size: 14px; color: #a3a8b8; }
+            .card p { margin: 8px 0 0 0; font-size: 20px; font-weight: bold; color: #00ffcc; }
             .status { margin-top: 15px; font-style: italic; color: #888; }
         </style>
     </head>

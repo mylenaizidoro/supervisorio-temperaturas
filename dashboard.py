@@ -5,33 +5,26 @@ import time
 
 st.set_page_config(page_title="Supervisório Industrial", page_icon="🌡️", layout="wide")
 
-# Inicializa o estado para controlar se entrou ou não na máquina
 if "maquina_selecionada" not in st.session_state:
     st.session_state.maquina_selecionada = False
 
-# URL atualizada com o seu túnel ativo
 API_GET_URL = "https://eight-bushes-attack.loca.lt/temperaturas"
 HEADERS = {"serveo-skip-browser-warning": "true"}
 
-# --- TELA INICIAL: ESCOLHA DA MÁQUINA ---
 if not st.session_state.maquina_selecionada:
     st.title("🏭 Central de Supervisão - Células Industriais")
     st.write("Selecione abaixo a máquina que deseja monitorar em tempo real:")
     
     st.markdown("---")
     
-    # Criando colunas para deixar o botão em destaque
     col_btn1, col_btn2, col_btn3 = st.columns(3)
     
     with col_btn1:
-        # O botão que você pediu
         if st.button("🔥 Máquina de Solda - Temperaturas", use_container_width=True):
             st.session_state.maquina_selecionada = True
             st.rerun()
 
-# --- TELA DE DETALHES: O PAINEL DE TEMPERATURAS ---
 else:
-    # Botão para voltar à seleção de máquinas
     if st.button("⬅️ Voltar para a Seleção de Máquinas"):
         st.session_state.maquina_selecionada = False
         st.rerun()
@@ -43,9 +36,10 @@ else:
     cards_placeholder = st.empty()
     grafico_placeholder = st.empty()
 
-    # Loop de atualização em tempo real dos dados da API
     try:
-        response = requests.get(API_GET_URL, headers=HEADERS, timeout=5)
+        # Aumentado para 15 segundos para dar folga ao Localtunnel
+        response = requests.get(API_GET_URL, headers=HEADERS, timeout=15)
+        
         if response.status_code == 200:
             historico_bruto = response.json()
             
@@ -61,7 +55,6 @@ else:
                 
                 status_placeholder.success(f"Última sincronização com a API: {df['timestamp'].iloc[-1]}")
                 
-                # Exibe os cards com os valores atuais
                 with cards_placeholder.container():
                     st.subheader("📊 Valores Atuais por Sensor")
                     ultima_linha = df.iloc[-1]
@@ -72,7 +65,6 @@ else:
                             val = ultima_linha[sensor_nome]
                             col.metric(label=sensor_nome, value=f"{val} °C")
 
-                # Exibe as opções de gráficos em abas (Linhas e Barras)
                 with grafico_placeholder.container():
                     st.subheader("📈 Análise Gráfica dos Sensores")
                     

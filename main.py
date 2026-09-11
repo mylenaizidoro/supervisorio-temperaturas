@@ -4,9 +4,9 @@ from typing import List, Dict, Any
 
 app = FastAPI()
 
-# Lista para armazenar o histórico recente das temperaturas na memória
+# Memória temporária para guardar as últimas leituras de temperatura
 historico_temperaturas: List[Dict[str, Any]] = []
-MAX_HISTORICO = 100  # Mantém os últimos 100 registros
+MAX_HISTORICO = 50
 
 class LeituraPayload(BaseModel):
     timestamp: str
@@ -30,13 +30,9 @@ class LeituraPayload(BaseModel):
 
 @app.post("/temperaturas")
 def receber_temperaturas(dados: LeituraPayload):
-    # Converte os dados recebidos para dicionário
     registro = dados.dict()
-    
-    # Adiciona ao histórico
     historico_temperaturas.append(registro)
     
-    # Limita o tamanho do histórico para não encher a memória
     if len(historico_temperaturas) > MAX_HISTORICO:
         historico_temperaturas.pop(0)
         
@@ -44,4 +40,6 @@ def receber_temperaturas(dados: LeituraPayload):
 
 @app.get("/temperaturas")
 def obter_temperaturas():
+    if not historico_temperaturas:
+        return []
     return historico_temperaturas

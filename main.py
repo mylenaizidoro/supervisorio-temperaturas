@@ -121,6 +121,7 @@ def tela_inicial():
             <div class="btn-grupo">
                 <a href="/painel" class="btn-app">🌡️ DADOS DE TEMPERATURA MÁQUINA DE SOLDA</a>
                 <a href="/ph02-dash" class="btn-app btn-secundario">⚙️ PH02 - DASH (EM BREVE)</a>
+                <a href="/ph03-isolador" class="btn-app btn-secundario">⚡ PH03 - ISOLADOR T CROSS (EM BREVE)</a>
             </div>
         </div>
     </body>
@@ -234,6 +235,55 @@ def ph02_dash():
         <div class="container">
             <div class="logo-coplac">COPLAC</div>
             <h1>⚙️ PH02 - Dash</h1>
+            <p>Este painel está em fase de estruturação e integração de dados. Em breve estará disponível para monitoramento.</p>
+            <a href="/" class="btn-voltar">⬅ Voltar ao Menu</a>
+        </div>
+    </body>
+    </html>
+    """
+
+# Rota temporária para a máquina PH03 - ISOLADOR T CROSS
+@app.get("/ph03-isolador", response_class=HTMLResponse)
+def ph03_isolador():
+    return """
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>COPLAC - PH03 Isolador T Cross</title>
+        <style>
+            body { 
+                background-color: #0e1117; 
+                color: #fafafa; 
+                font-family: sans-serif; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                height: 100vh; 
+                margin: 0; 
+            }
+            .container { 
+                text-align: center; 
+                background: #262730; 
+                padding: 40px; 
+                border-radius: 12px; 
+                border: 1px solid #46485f; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                max-width: 450px;
+                width: 90%;
+            }
+            .logo-coplac { font-family: 'Georgia', serif; font-size: 28px; font-weight: bold; font-style: italic; color: #cc2929; margin-bottom: 5px; }
+            h1 { color: #fafafa; font-size: 22px; margin-bottom: 10px; }
+            p { color: #a3a8b8; margin-bottom: 30px; font-size: 15px; }
+            .btn-voltar { background-color: #46485f; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; display: inline-block; }
+            .btn-voltar:hover { background-color: #5c5f78; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo-coplac">COPLAC</div>
+            <h1>⚡ PH03 - Isolador T Cross</h1>
             <p>Este painel está em fase de estruturação e integração de dados. Em breve estará disponível para monitoramento.</p>
             <a href="/" class="btn-voltar">⬅ Voltar ao Menu</a>
         </div>

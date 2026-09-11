@@ -1,62 +1,27 @@
+
 import streamlit as st
 import pandas as pd
 import requests
+import time
 
-st.set_page_config(page_title="Supervisório Industrial", page_icon="🌡️", layout="wide")
+st.set_page_config(page_title="Supervisório de Temperaturas", page_icon="🌡️", layout="wide")
 
-if "pagina" not in st.session_state:
-    st.session_state.pagina = "home"
+st.title("🌡️ Painel de Monitoramento - Temperaturas CLP")
+st.write("Acompanhamento em tempo real dos canais do CLP Delta DVP-12SE.")
 
+status_placeholder = st.empty()
+cards_placeholder = st.empty()
+grafico_placeholder = st.empty()
+
+# URL atualizada com o novo túnel ativo do Serveo
 API_GET_URL = "https://real-days-hunt.loca.lt/temperaturas"
+
+# Cabeçalho necessário para o Serveo liberar o acesso da API sem a página de aviso
 HEADERS = {"serveo-skip-browser-warning": "true"}
 
-# ---------------------------------------------------------
-# TELA 1: MENU PRINCIPAL (SELEÇÃO DE MÁQUINAS)
-# ---------------------------------------------------------
-if st.session_state.pagina == "home":
-    st.title("🏭 Central de Supervisão - Células Industriais")
-    st.write("Selecione abaixo a máquina que deseja monitorar em tempo real:")
-    
-    st.markdown("---")
-    
-    if st.button("🔥 Máquina de Solda - Temperaturas", use_container_width=True):
-        st.session_state.pagina = "solda"
-        st.rerun()
-        
-    if st.button("📊 PH02 - Dash", use_container_width=True):
-        st.session_state.pagina = "outra"
-        st.rerun()
-        
-    if st.button("🛡️ PH09 - Isolant Plancher", use_container_width=True):
-        st.session_state.pagina = "outra"
-        st.rerun()
-        
-    if st.button("⚙️ PH20 - XDF", use_container_width=True):
-        st.session_state.pagina = "outra"
-        st.rerun()
-        
-    if st.button("🔧 PH03 - Isolador Tcross", use_container_width=True):
-        st.session_state.pagina = "outra"
-        st.rerun()
-
-# ---------------------------------------------------------
-# TELA 2: APENAS O PAINEL DE TEMPERATURAS DA MÁQUINA DE SOLDA
-# ---------------------------------------------------------
-elif st.session_state.pagina == "solda":
-    if st.button("⬅️ Voltar para a Seleção de Máquinas"):
-        st.session_state.pagina = "home"
-        st.rerun()
-
-    st.title("🔥 Supervisório - Máquina de Solda (Temperaturas)")
-    st.write("Acompanhamento em tempo real dos canais do CLP Delta DVP-12SE.")
-
-    status_placeholder = st.empty()
-    cards_placeholder = st.empty()
-    grafico_placeholder = st.empty()
-
+while True:
     try:
-        response = requests.get(API_GET_URL, headers=HEADERS, timeout=15)
-        
+        response = requests.get(API_GET_URL, headers=HEADERS)
         if response.status_code == 200:
             historico_bruto = response.json()
             
@@ -72,6 +37,7 @@ elif st.session_state.pagina == "solda":
                 
                 status_placeholder.success(f"Última sincronização com a API: {df['timestamp'].iloc[-1]}")
                 
+                # Exibe os cards com os nomes "Sensor X"
                 with cards_placeholder.container():
                     st.subheader("📊 Valores Atuais por Sensor")
                     ultima_linha = df.iloc[-1]
@@ -82,19 +48,11 @@ elif st.session_state.pagina == "solda":
                             val = ultima_linha[sensor_nome]
                             col.metric(label=sensor_nome, value=f"{val} °C")
 
+                # Exibe o gráfico de linhas histórico
                 with grafico_placeholder.container():
-                    st.subheader("📈 Análise Gráfica dos Sensores")
-                    
-                    aba_linhas, aba_barras = st.tabs(["📈 Gráfico de Linhas (Tendência)", "📊 Gráfico de Barras (Comparativo)"])
-                    
+                    st.subheader("📈 Gráfico de Tendência dos Sensores")
                     df_plot = df.set_index("timestamp")
-                    
-                    with aba_linhas:
-                        st.line_chart(df_plot)
-                        
-                    with aba_barras:
-                        df_barras = ultima_linha.drop("timestamp")
-                        st.bar_chart(df_barras)
+                    st.line_chart(df_plot)
             else:
                 status_placeholder.warning("⚠️ A API conectou, mas o histórico de dados ainda está vazio.")
         else:
@@ -103,13 +61,4 @@ elif st.session_state.pagina == "solda":
     except Exception as e:
         status_placeholder.error(f"❌ Erro ao conectar com a API FastAPI: {e}")
 
-# ---------------------------------------------------------
-# TELA 3: AVISO PARA AS OUTRAS MÁQUINAS
-# ---------------------------------------------------------
-else:
-    if st.button("⬅️ Voltar para a Seleção de Máquinas"):
-        st.session_state.pagina = "home"
-        st.rerun()
-
-    st.title("⚙️ Célula em Desenvolvimento")
-    st.info("ℹ️ Esta máquina ainda não possui o supervisório de temperaturas integrado. Volte em breve!")
+    time.sleep(3)

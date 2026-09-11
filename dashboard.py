@@ -12,7 +12,8 @@ status_placeholder = st.empty()
 cards_placeholder = st.empty()
 grafico_placeholder = st.empty()
 
-API_GET_URL = "https://338bcf9f78c28e92-179-68-117-40.serveousercontent.com/temperaturas"
+# URL atualizada com o novo túnel ativo do Serveo
+API_GET_URL = "https://8edead4laca8f305-179-68-117-40.serveousercontent.com/temperaturas"
 
 # Cabeçalho necessário para o Serveo liberar o acesso da API sem a página de aviso
 HEADERS = {"serveo-skip-browser-warning": "true"}

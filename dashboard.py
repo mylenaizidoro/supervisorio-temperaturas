@@ -12,8 +12,8 @@ status_placeholder = st.empty()
 cards_placeholder = st.empty()
 grafico_placeholder = st.empty()
 
-# ⚠️ COLOQUE AQUI O SEU LINK DO NGROK (Ex: "https://xxxx-xx.ngrok-free.app/temperaturas")
-API_GET_URL = "https://SEU_LINK_DO_NGROK/temperaturas"
+# URL atualizada com o seu túnel ativo do Serveo
+API_GET_URL = "https://338bcf9f78c28e92-179-68-117-40.serveousercontent.com/temperaturas"
 
 while True:
     try:

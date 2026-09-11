@@ -43,28 +43,96 @@ def obter_temperaturas():
         return []
     return historico_temperaturas
 
+# Rota da Tela Inicial com o Botão de Acesso
 @app.get("/", response_class=HTMLResponse)
+def tela_inicial():
+    return """
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Central de Supervisório - Fábrica</title>
+        <style>
+            body { 
+                background-color: #0e1117; 
+                color: #fafafa; 
+                font-family: sans-serif; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                height: 100vh; 
+                margin: 0; 
+            }
+            .container { 
+                text-align: center; 
+                background: #262730; 
+                padding: 40px; 
+                border-radius: 12px; 
+                border: 1px solid #46485f; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            }
+            h1 { color: #ff4b4b; margin-bottom: 10px; }
+            p { color: #a3a8b8; margin-bottom: 30px; }
+            .btn-app { 
+                background-color: #ff4b4b; 
+                color: white; 
+                padding: 16px 28px; 
+                font-size: 18px; 
+                font-weight: bold; 
+                border: none; 
+                border-radius: 8px; 
+                cursor: pointer; 
+                text-decoration: none; 
+                display: inline-block; 
+                transition: background 0.3s;
+            }
+            .btn-app:hover { 
+                background-color: #ff2222; 
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🏭 Central de Automação Industrial</h1>
+            <p>Selecione o equipamento desejado para monitoramento:</p>
+            <a href="/painel" class="btn-app">DADOS DE TEMPERATURA MÁQUINA DE SOLDA</a>
+        </div>
+    </body>
+    </html>
+    """
+
+# Rota do Painel de Monitoramento dos 17 Canais
+@app.get("/painel", response_class=HTMLResponse)
 def painel_visual():
     return """
     <!DOCTYPE html>
     <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
-        <title>Supervisório de Temperaturas - CLP</title>
+        <title>Supervisório - Máquina de Solda</title>
         <style>
             body { background-color: #0e1117; color: #fafafa; font-family: sans-serif; padding: 20px; }
-            h1 { color: #ff4b4b; }
+            .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+            h1 { color: #ff4b4b; margin: 0; font-size: 24px; }
+            .btn-voltar { background-color: #46485f; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-size: 14px; }
+            .btn-voltar:hover { background-color: #5c5f78; }
             .card-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 20px; }
             .card { background-color: #262730; border-radius: 8px; padding: 12px; text-align: center; border: 1px solid #46485f; }
             .card h3 { margin: 0; font-size: 14px; color: #a3a8b8; }
             .card p { margin: 8px 0 0 0; font-size: 20px; font-weight: bold; color: #00ffcc; }
-            .status { margin-top: 15px; font-style: italic; color: #888; }
         </style>
     </head>
     <body>
-        <h1>🌡️ Painel de Monitoramento - Temperaturas CLP</h1>
-        <p>Acompanhamento em tempo real dos canais do CLP Delta DVP-12SE.</p>
-        <div id="timestamp" style="font-weight: bold; color: #ffa500; margin-bottom: 10px;">Aguardando dados...</div>
+        <div class="header-bar">
+            <div>
+                <h1>🌡️ Temperaturas - Máquina de Solda</h1>
+                <p style="margin: 5px 0 0 0; color: #a3a8b8; font-size: 14px;">Monitoramento em tempo real dos 17 canais do CLP Delta DVP-12SE.</p>
+            </div>
+            <a href="/" class="btn-voltar">⬅ Voltar ao Menu</a>
+        </div>
+
+        <div id="timestamp" style="font-weight: bold; color: #ffa500; margin-bottom: 15px;">Aguardando dados...</div>
         <div class="card-container" id="grid-sensores"></div>
 
         <script>

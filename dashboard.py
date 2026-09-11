@@ -5,7 +5,6 @@ import time
 
 st.set_page_config(page_title="Supervisório Industrial", page_icon="🌡️", layout="wide")
 
-# Inicializa o estado para controlar qual máquina foi selecionada
 if "maquina_selecionada" not in st.session_state:
     st.session_state.maquina_selecionada = None
 
@@ -19,7 +18,6 @@ if st.session_state.maquina_selecionada is None:
     
     st.markdown("---")
     
-    # Botões organizados em pilha vertical com largura total
     if st.button("🔥 Máquina de Solda - Temperaturas", use_container_width=True):
         st.session_state.maquina_selecionada = "Máquina de Solda - Temperaturas"
         st.rerun()
@@ -40,14 +38,13 @@ if st.session_state.maquina_selecionada is None:
         st.session_state.maquina_selecionada = "PH03 - Isolador Tcross"
         st.rerun()
 
-# --- TELA DE DETALHES: O PAINEL DE TEMPERATURAS ---
-else:
-    # Botão para voltar à seleção de máquinas
+# --- TELA DE DETALHES: MÁQUINA DE SOLDA ---
+elif st.session_state.maquina_selecionada == "Máquina de Solda - Temperaturas":
     if st.button("⬅️ Voltar para a Seleção de Máquinas"):
         st.session_state.maquina_selecionada = None
         st.rerun()
 
-    st.title(f"🔥 Supervisório - {st.session_state.maquina_selecionada}")
+    st.title("🔥 Supervisório - Máquina de Solda (Temperaturas)")
     st.write("Acompanhamento em tempo real dos canais do CLP Delta DVP-12SE.")
 
     status_placeholder = st.empty()
@@ -102,3 +99,12 @@ else:
 
     except Exception as e:
         status_placeholder.error(f"❌ Erro ao conectar com a API FastAPI: {e}")
+
+# --- TELA PARA AS OUTRAS MÁQUINAS (EM BREVE) ---
+else:
+    if st.button("⬅️ Voltar para a Seleção de Máquinas"):
+        st.session_state.maquina_selecionada = None
+        st.rerun()
+
+    st.title(f"⚙️ {st.session_state.maquina_selecionada}")
+    st.info("ℹ️ Esta célula ainda está em fase de configuração ou sem supervisório de temperaturas integrado no momento. Volte em breve!")

@@ -1,64 +1,50 @@
-
 import streamlit as st
-import pandas as pd
 import requests
+import pandas as pd
 import time
 
-st.set_page_config(page_title="Supervisório de Temperaturas", page_icon="🌡️", layout="wide")
+# Configuração da página
+st.set_page_config(
+    page_title="Supervisório de Temperaturas - CLP",
+    page_icon="🌡️",
+    layout="wide"
+)
 
 st.title("🌡️ Painel de Monitoramento - Temperaturas CLP")
-st.write("Acompanhamento em tempo real dos canais do CLP Delta DVP-12SE.")
+st.markdown("Acompanhamento em tempo real dos canais do CLP Delta DVP-12SE.")
 
-status_placeholder = st.empty()
-cards_placeholder = st.empty()
-grafico_placeholder = st.empty()
+# URL interna onde o FastAPI está rodando no mesmo container do Render
+API_URL_INTERNA = "http://127.0.0.1:8000/temperaturas"
 
-# URL atualizada com o novo túnel ativo do Serveo
-API_GET_URL = "https://tender-walls-live.loca.lt/temperaturas"
-
-# Cabeçalho necessário para o Serveo liberar o acesso da API sem a página de aviso
-HEADERS = {"serveo-skip-browser-warning": "true"}
-
-while True:
+def buscar_dados():
     try:
-        response = requests.get(API_GET_URL, headers=HEADERS)
+        response = requests.get(API_URL_INTERNA, timeout=3)
         if response.status_code == 200:
-            historico_bruto = response.json()
-            
-            if historico_bruto and isinstance(historico_bruto, list):
-                dados_formatados = []
-                for item in historico_bruto:
-                    linha = {"timestamp": item.get("timestamp", "")}
-                    for i in range(1, 18):
-                        linha[f"Sensor {i}"] = item.get(f"sensor_{i}", 0.0)
-                    dados_formatados.append(linha)
-                
-                df = pd.DataFrame(dados_formatados)
-                
-                status_placeholder.success(f"Última sincronização com a API: {df['timestamp'].iloc[-1]}")
-                
-                # Exibe os cards com os nomes "Sensor X"
-                with cards_placeholder.container():
-                    st.subheader("📊 Valores Atuais por Sensor")
-                    ultima_linha = df.iloc[-1]
-                    cols = st.columns(6)
-                    for idx, col in enumerate(cols):
-                        if idx < 17:
-                            sensor_nome = f"Sensor {idx+1}"
-                            val = ultima_linha[sensor_nome]
-                            col.metric(label=sensor_nome, value=f"{val} °C")
+            return response.json()
+    except Exception:
+        pass
+    return None
 
-                # Exibe o gráfico de linhas histórico
-                with grafico_placeholder.container():
-                    st.subheader("📈 Gráfico de Tendência dos Sensores")
-                    df_plot = df.set_index("timestamp")
-                    st.line_chart(df_plot)
-            else:
-                status_placeholder.warning("⚠️ A API conectou, mas o histórico de dados ainda está vazio.")
-        else:
-            status_placeholder.warning(f"⚠️ A API respondeu com o código de status: {response.status_code}")
+# Tenta buscar os dados com tratamento de espera
+dados = buscar_dados()
 
-    except Exception as e:
-        status_placeholder.error(f"❌ Erro ao conectar com a API FastAPI: {e}")
+if not dados:
+    st.warning("⚠️ Aguardando conexão com a API de temperaturas ou nenhum dado enviado ainda. Verifique se o leitor do CLP está rodando na fábrica.")
+else:
+    # Pega o último registro enviado pelo CLP
+    ultimo_registro = dados[-1]
+    
+    st.subheader(f"Última Atualização: {ultimo_registro.get('timestamp', 'N/A')}")
+    
+    # Exibe os sensores em cartões organizados
+    colunas = st.columns(4)
+    for i in range(1, 18):
+        nome_sensor = f"sensor_{i}"
+        valor = ultimo_registro.get(nome_sensor, 0.0)
+        
+        with colunas[(i - 1) % 4]:
+            st.metric(label=f"Canal {i}", value=f"{valor} °C")
 
-    time.sleep(3)
+# Atualiza a página automaticamente a cada 5 segundos
+time.sleep(5)
+st.rerun()

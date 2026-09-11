@@ -13,7 +13,7 @@ cards_placeholder = st.empty()
 grafico_placeholder = st.empty()
 
 # URL atualizada com o novo túnel ativo do Serveo
-API_GET_URL = "https://5f132bb71ff09a48-179-68-117-40.serveousercontent.com/temperaturas"
+API_GET_URL = "https://ninety-actors-read.loca.lt/temperaturas"
 
 # Cabeçalho necessário para o Serveo liberar o acesso da API sem a página de aviso
 HEADERS = {"serveo-skip-browser-warning": "true"}

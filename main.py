@@ -5,7 +5,7 @@ from typing import List, Dict, Any
 
 app = FastAPI()
 
-# Memória temporária para guardar as últimas leituras
+# Memória temporária para guardar as últimas leituras da Máquina de Solda
 historico_temperaturas: List[Dict[str, Any]] = []
 MAX_HISTORICO = 50
 
@@ -43,7 +43,7 @@ def obter_temperaturas():
         return []
     return historico_temperaturas
 
-# Rota da Tela Inicial com a identidade COPLAC
+# Rota da Tela Inicial com os Botões das Máquinas
 @app.get("/", response_class=HTMLResponse)
 def tela_inicial():
     return """
@@ -71,7 +71,7 @@ def tela_inicial():
                 border-radius: 12px; 
                 border: 1px solid #46485f; 
                 box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-                max-width: 500px;
+                max-width: 520px;
                 width: 90%;
             }
             .logo-coplac { 
@@ -86,11 +86,12 @@ def tela_inicial():
             .sub-logo { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 25px; }
             h1 { color: #fafafa; font-size: 20px; margin-bottom: 10px; }
             p { color: #a3a8b8; margin-bottom: 30px; font-size: 14px; }
+            .btn-grupo { display: flex; flex-direction: column; gap: 15px; }
             .btn-app { 
                 background-color: #cc2929; 
                 color: white; 
                 padding: 16px 20px; 
-                font-size: 16px; 
+                font-size: 15px; 
                 font-weight: bold; 
                 border: none; 
                 border-radius: 8px; 
@@ -102,6 +103,13 @@ def tela_inicial():
             .btn-app:hover { 
                 background-color: #e63939; 
             }
+            .btn-secundario {
+                background-color: #363846;
+                border: 1px solid #46485f;
+            }
+            .btn-secundario:hover {
+                background-color: #46485f;
+            }
         </style>
     </head>
     <body>
@@ -110,13 +118,16 @@ def tela_inicial():
             <div class="sub-logo">Automation Systems</div>
             <h1>Central de Automação Industrial</h1>
             <p>Selecione o equipamento desejado para monitoramento:</p>
-            <a href="/painel" class="btn-app">🌡️ DADOS DE TEMPERATURA MÁQUINA DE SOLDA</a>
+            <div class="btn-grupo">
+                <a href="/painel" class="btn-app">🌡️ DADOS DE TEMPERATURA MÁQUINA DE SOLDA</a>
+                <a href="/ph02-dash" class="btn-app btn-secundario">⚙️ PH02 - DASH (EM BREVE)</a>
+            </div>
         </div>
     </body>
     </html>
     """
 
-# Rota do Painel de Monitoramento dos 17 Canais com a marca COPLAC
+# Rota do Painel da Máquina de Solda (17 Canais)
 @app.get("/painel", response_class=HTMLResponse)
 def painel_visual():
     return """
@@ -177,6 +188,55 @@ def painel_visual():
             setInterval(atualizarDados, 3000);
             atualizarDados();
         </script>
+    </body>
+    </html>
+    """
+
+# Rota temporária para a máquina PH02 - DASH
+@app.get("/ph02-dash", response_class=HTMLResponse)
+def ph02_dash():
+    return """
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>COPLAC - PH02 Dash</title>
+        <style>
+            body { 
+                background-color: #0e1117; 
+                color: #fafafa; 
+                font-family: sans-serif; 
+                display: flex; 
+                flex-direction: column; 
+                align-items: center; 
+                justify-content: center; 
+                height: 100vh; 
+                margin: 0; 
+            }
+            .container { 
+                text-align: center; 
+                background: #262730; 
+                padding: 40px; 
+                border-radius: 12px; 
+                border: 1px solid #46485f; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+                max-width: 450px;
+                width: 90%;
+            }
+            .logo-coplac { font-family: 'Georgia', serif; font-size: 28px; font-weight: bold; font-style: italic; color: #cc2929; margin-bottom: 5px; }
+            h1 { color: #fafafa; font-size: 22px; margin-bottom: 10px; }
+            p { color: #a3a8b8; margin-bottom: 30px; font-size: 15px; }
+            .btn-voltar { background-color: #46485f; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-size: 14px; display: inline-block; }
+            .btn-voltar:hover { background-color: #5c5f78; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo-coplac">COPLAC</div>
+            <h1>⚙️ PH02 - Dash</h1>
+            <p>Este painel está em fase de estruturação e integração de dados. Em breve estará disponível para monitoramento.</p>
+            <a href="/" class="btn-voltar">⬅ Voltar ao Menu</a>
+        </div>
     </body>
     </html>
     """
